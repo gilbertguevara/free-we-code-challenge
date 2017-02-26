@@ -1,0 +1,57 @@
+buildscript {
+    ext.kotlin_version = '1.1.0-dev-7127'
+    ext.kotlinx_html_version = 'bootstrap-1.1.0-dev-7127-37'
+
+    repositories {
+        mavenCentral()
+        maven {
+            url 'https://dl.bintray.com/kotlin/kotlin-dev'
+        }
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+apply plugin: 'kotlin2js'
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://dl.bintray.com/kotlin/kotlin-dev'
+    }
+}
+
+dependencies {
+    compile "org.jetbrains.kotlinx:kotlinx-html-js:$kotlinx_html_version"
+}
+
+task jarSources(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'source'
+}
+artifacts {
+    compile jarSources
+}
+
+def outDir = "${buildDir}/kotlin2js/main/"
+
+compileKotlin2Js.kotlinOptions.outputFile = outDir + "datePicker-library.js"
+compileKotlin2Js.kotlinOptions.sourceMap = true
+
+jar {
+    from sourceSets.main.allSource
+    include "**/*.kt"
+
+    from outDir
+    include "**/*.js"
+
+    manifest {
+        attributes(
+                "Specification-Title": "Kotlin JavaScript Lib",
+                "Kotlin-JS-Module-Name": "test-library"
+        )
+    }
+}
+
+jar.dependsOn(compileKotlin2Js)

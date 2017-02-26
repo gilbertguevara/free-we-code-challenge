@@ -1,0 +1,33 @@
+#datepicker {
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #dbdbdb;
+    box-shadow: 0 4px 12px rgba(0,0,0,.15);
+    border-radius: 4px;
+    box-sizing: content-box;
+    font-family: Tahoma,sans-serif;
+    font-size: 14px;
+    color: #4a4a4a;
+    padding: 6px;
+    position: absolute;
+    width: 200px;
+    z-index: 100;
+}
+
+.datepicker-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: 1px solid #efefef;
+    align-items: center;
+    min-height: 32px;
+    padding: 4px;
+}
+
+.datepicker-header span {
+    vertical-align: middle;
+}
+
+.datepicker-calendar {
+    width: inherit;
+}

@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Kotlin-JS-Module-Name: test-library
+Specification-Title: Kotlin JavaScript Lib
+
