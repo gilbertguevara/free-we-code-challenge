@@ -12,7 +12,7 @@ artifacts {
 
 def outDir = "${buildDir}/kotlin2js/main/"
 
-compileKotlin2Js.kotlinOptions.outputFile = outDir + "datePicker-library.js"
+compileKotlin2Js.kotlinOptions.outputFile = outDir + "timePicker-library.js"
 compileKotlin2Js.kotlinOptions.sourceMap = true
 
 jar {
@@ -24,7 +24,7 @@ jar {
 
     manifest {
         attributes(
-                "Specification-Title": "DatePicker JavaScript Lib",
+                "Specification-Title": "TimePicker JavaScript Lib",
                 "Kotlin-JS-Module-Name": "test-library"
         )
     }

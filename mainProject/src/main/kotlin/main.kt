@@ -1,4 +1,5 @@
-import com.hugeinc.datepicker.DatePicker
+import org.example.datepicker.DatePicker
+import org.example.timepicker.TimePicker
 import org.w3c.dom.HTMLInputElement
 import kotlin.browser.document
 
@@ -8,6 +9,9 @@ import kotlin.browser.document
  * Time: 5:04 PM
  */
 fun main(args: Array<String>) {
-    val input = document.getElementById("datepickerinput") as HTMLInputElement
-    DatePicker(input)
+    val inputDatePicker = document.getElementById("datepickerinput") as HTMLInputElement
+    val inputTimePicker = document.getElementById("timepickerinput") as HTMLInputElement
+
+    DatePicker(inputDatePicker)
+    TimePicker(inputTimePicker)
 }

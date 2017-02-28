@@ -5,16 +5,31 @@
     <title>Appointment Creator</title>
     <script src="js/lib/kotlin.js"></script>
     <script src="js/lib/kotlinx-html-js.js"></script>
+    <script src="js/lib/common-library.js"></script>
     <script src="js/lib/datePicker-library.js"></script>
+    <script src="js/lib/timePicker-library.js"></script>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 <h1>Welcome to the Appointment Creator!</h1>
-<p>Please select a date for your appointment:</p>
+<p>Please select a date and time for your appointment:</p>
 
-<input type="text" id="datepickerinput" placeholder="Choose a date..." />
-<script src="js/app.js"></script>
+<div class="content">
+    <div>
+        <input type="text" id="datepickerinput" placeholder="Choose a date..."/>
+    </div>
+    <div>
+        <input type="text" id="timepickerinput"/>
+    </div>
+
+    <div class="buttons">
+        <a href="#" id="save" class="btn blue">Save</a>
+        <a href="#" id="cancel" class="btn blue">Cancel</a>
+    </div>
+
+    <script src="js/app.js"></script>
+</div>
 </body>
 </html>
