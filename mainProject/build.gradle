@@ -3,11 +3,13 @@ dependencies {
     compile project(":timePickerProject")
 }
 
-compileKotlin2Js.kotlinOptions.sourceMap = true
-compileKotlin2Js.kotlinOptions.outputFile = "${rootDir}/web/js/app.js"
-compileKotlin2Js.kotlinOptions.suppressWarnings = true
-compileKotlin2Js.kotlinOptions.moduleKind = 'umd'
-compileKotlin2Js.kotlinOptions.verbose = true
+compileKotlin2Js {
+    kotlinOptions.sourceMap = true
+    kotlinOptions.outputFile = "${rootDir}/web/js/app.js"
+    kotlinOptions.suppressWarnings = true
+    kotlinOptions.moduleKind = 'umd'
+    kotlinOptions.verbose = true
+}
 
 build.doLast {
     configurations.compile.each { File file ->

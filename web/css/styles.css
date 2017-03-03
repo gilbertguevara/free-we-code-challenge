@@ -5,16 +5,18 @@ body {
 
 .content {
     display: flex;
-    flex-direction: row;
-    position: relative;
+    flex-direction: column;
 }
 
 .content > div {
-    margin-right: 24px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: row;
 }
 
 #datepicker {
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
     background: #fff;
     border: 1px solid #dbdbdb;
     box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
@@ -22,10 +24,16 @@ body {
     box-sizing: content-box;
     font-size: 14px;
     color: #4a4a4a;
-    padding: 6px;
+    padding: 12px;
     position: absolute;
-    width: 200px;
+    width: 380px;
     z-index: 100;
+}
+
+.datepicker-calendar {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
 }
 
 .datepicker-header {
@@ -42,8 +50,8 @@ body {
     vertical-align: middle;
 }
 
-.datepicker-calendar {
-    width: inherit;
+.datepicker-days {
+    width: 100%;
 }
 
 .datepicker-dayname {
@@ -62,6 +70,13 @@ body {
 
 .datepicker-prev, .datepicker-next {
     cursor: pointer;
+}
+
+.datepicker-filter {
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid #cecece;
+    padding-left: 12px;
 }
 
 .datepicker-day {
@@ -83,6 +98,10 @@ body {
     color: white;
 }
 
+.datepicker-disabled {
+    color: #dedede;
+}
+
 input[type=text] {
     outline: 0;
     height: 32px;
@@ -100,6 +119,7 @@ input[type=text]:focus {
     width: 200px;
     background: url(../images/ic_date_range_black_36px.svg) right no-repeat;
     background-size: 24px 24px;
+    margin-right: 24px;
 }
 
 .timepicker-input {
@@ -117,7 +137,7 @@ input[type=text]:focus {
     box-sizing: content-box;
     font-size: 14px;
     color: #4a4a4a;
-    position: relative;
+    position: absolute;
     z-index: 100;
     max-height: 200px;
     width: 150px;
@@ -152,12 +172,19 @@ input[type=text]:focus {
     -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
 }
 
+.buttons a {
+    margin-right: 12px;
+}
+
 .btn {
     border-radius: 4px;
     padding: 12px 24px;
     color: #fff;
     position: relative;
     display: inline-block;
+    text-decoration: none;
+    min-width: 50px;
+    text-align: center;
 }
 
 .btn:active {
@@ -173,4 +200,42 @@ input[type=text]:focus {
 
 .blue:hover {
     background-color: #6FC6FF;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.tabs .tab {
+    flex-grow: 1;
+    max-height: 40px;
+    border-radius: 4px;
+    box-sizing: border-box;
+    display: inline-block;
+    padding: 10px;
+    vertical-align: top;
+    cursor: hand;
+    cursor: pointer;
+    border-left: 10px solid #ccc;
+}
+
+.tabs .tab:hover {
+    border-left-color: #C5C9A4;
+}
+
+.state {
+    position: absolute;
+    left: -10000px;
+}
+
+#any:checked ~ .tabs #label-any,
+#weekdays:checked ~ .tabs #label-weekdays,
+#weekends:checked ~ .tabs #label-weekends {
+    background-color: #efefef;
+    cursor: default;
+    border-left-color: #476A6F;
 }

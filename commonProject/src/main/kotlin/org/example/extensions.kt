@@ -14,12 +14,17 @@ import kotlin.js.Date
  * Time: 1:14 PM
  */
 
+// Int related extensions
+fun Int.appendZero(): String = if (this > 9) "$this" else "0" + this
+
 // Date related extensions
-inline fun Date.getDayOfMonth(): Int = asDynamic().getDay()
+inline fun Date.getDayOfWeek(): Int = asDynamic().getDay()
 
 inline fun Date.getDate(): Int = asDynamic().getDate()
 inline fun Date.getMonth(): Int = asDynamic().getMonth()
 inline fun Date.getFullYear(): Int = asDynamic().getFullYear()
+inline fun Date.getHours(): Int = asDynamic().getHours()
+inline fun Date.getMinutes(): Int = asDynamic().getMinutes()
 
 fun Date.clone(): Date {
     val clonedDate = Date()
@@ -34,17 +39,26 @@ fun Date.toShortString(): String {
     return "$monthStr/$dayStr/${getFullYear()}"
 }
 
-fun Int.appendZero(): String = if (this > 9) "$this" else "0" + this
+fun Date.dateInt(): Int {
+    val monthStr = (getMonth() + 1).appendZero()
+    val dayStr = getDate().appendZero()
+
+    return "${getFullYear()}$monthStr$dayStr".toInt()
+}
 
 inline fun Date.setTime(time: Double) = asDynamic().setTime(time)
 inline fun Date.setDate(day: Int) = asDynamic().setDate(day)
 inline fun Date.setMonth(month: Int) = asDynamic().setMonth(month)
+inline fun Date.setHours(hours: Int, minutes: Int = 0, seconds: Int = 0, ms: Int = 0) = apply { asDynamic().setHours(hours, minutes, seconds, ms) }
 
 inline fun Date.addMonth(interval: Int): Date {
     return this.apply {
         setMonth(getMonth() + interval)
     }
 }
+
+inline fun Date.isWeekend() = (getDayOfWeek() == 0 || getDayOfWeek() == 6)
+inline fun Date.isWeekday() = !isWeekend()
 
 // HTML related extensions
 fun HTMLElement.hide() {
@@ -53,7 +67,6 @@ fun HTMLElement.hide() {
 
 fun HTMLElement.toggle() {
     style.display = if (style.display == "none") "flex" else "none"
-    style.opacity = "255"
 }
 
 inline fun HTMLCollection.removeCssClass(vararg cssClassName: String) = asList().forEach { element -> element.removeClass(*cssClassName) }

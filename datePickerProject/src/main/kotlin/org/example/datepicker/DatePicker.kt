@@ -2,11 +2,11 @@ package org.example.datepicker
 
 import kotlinx.html.*
 import kotlinx.html.dom.append
-import kotlinx.html.dom.create
 import kotlinx.html.js.div
 import kotlinx.html.js.onClickFunction
 import org.example.*
 import org.w3c.dom.*
+import org.w3c.dom.events.Event
 import kotlin.browser.document
 import kotlin.browser.window
 import kotlin.dom.addClass
@@ -18,7 +18,8 @@ import kotlin.js.Date
  * Date: 2/22/17
  * Time: 6:07 PM
  */
-class DatePicker(private val inputField: HTMLInputElement, private var date: Date = Date()) {
+class DatePicker(private val datePickerModel: datePickerModel) {
+
     companion object {
         val MONTH_NAMES: Array<String> = arrayOf("January", "February", "March", "April", "May", "June", "July",
                 "August", "September", "October", "November", "December")
@@ -28,14 +29,12 @@ class DatePicker(private val inputField: HTMLInputElement, private var date: Dat
     }
 
     private val datePickerView = document.createElement("div", { id = DATE_PICKER_PREFIX }) as HTMLDivElement
-    private val datePickerCalendar = document.createElement("table", { addClass(DATE_PICKER_PREFIX + "-calendar") }) as HTMLTableElement
+    private val datePickerCalendar = document.createElement("div", { addClass(DATE_PICKER_PREFIX + "-calendar") }) as HTMLDivElement
+    private val datePickerDays = document.createElement("table", { addClass(DATE_PICKER_PREFIX + "-days") }) as HTMLTableElement
     private val datePickerTitle = document.createElement("div", { addClass(DATE_PICKER_PREFIX + "-title") }) as HTMLDivElement
 
     init {
-        window.onclick = {
-            datePickerView.hide()
-        }
-        inputField.apply {
+        datePickerModel.inputField.apply {
             addClass(DATE_PICKER_PREFIX + "-input")
             readOnly = true
             onclick = { event ->
@@ -44,7 +43,8 @@ class DatePicker(private val inputField: HTMLInputElement, private var date: Dat
             }
         }
 
-        buildDatePicker(inputField)
+        buildDatePicker(datePickerModel.inputField)
+        window.addEventListener("click", { datePickerView.hide() })
     }
 
     /**
@@ -52,28 +52,29 @@ class DatePicker(private val inputField: HTMLInputElement, private var date: Dat
      */
     private fun buildDatePicker(inputField: HTMLElement) {
         datePickerView.hide()
-        buildHeader(datePickerView)
-        buildCalendar(datePickerView)
 
-        inputField.insertAdjacentElement("afterend", document.create.div {}.apply {
-            append(datePickerView)
-        })
+        inputField.insertAdjacentElement("afterend", datePickerView)
+        buildHeader(datePickerCalendar)
+        buildCalendar(datePickerCalendar)
+        datePickerView.appendChild(datePickerCalendar)
+        buildFilters(datePickerView)
     }
 
     /**
      * Build the component header
      */
-    private fun buildHeader(datePickerView: HTMLDivElement) {
+    private fun buildHeader(datePickerCalendar: HTMLDivElement) {
+        val date = datePickerModel.date
         populateTitle(date)
 
-        datePickerView.append {
+        datePickerCalendar.append {
             nav(DATE_PICKER_PREFIX + "-header") {
                 div(DATE_PICKER_PREFIX + "-prev") {
                     i("material-icons") {
                         +"keyboard_arrow_left"
                     }
                     onClickFunction = { event ->
-                        populateMonth(datePickerCalendar, date.addMonth(-1), true)
+                        populateMonth(datePickerDays, date.addMonth(-1), true)
                         event.stopPropagation()
                     }
                 }
@@ -85,7 +86,7 @@ class DatePicker(private val inputField: HTMLInputElement, private var date: Dat
                         +"keyboard_arrow_right"
                     }
                     onClickFunction = { event ->
-                        populateMonth(datePickerCalendar, date.addMonth(1), true)
+                        populateMonth(datePickerDays, date.addMonth(1), true)
                         event.stopPropagation()
                     }
                 }
@@ -109,8 +110,8 @@ class DatePicker(private val inputField: HTMLInputElement, private var date: Dat
     /**
      * Build the component calendar
      */
-    private fun buildCalendar(datePickerView: HTMLDivElement) {
-        datePickerCalendar.append {
+    private fun buildCalendar(datePickerCalendar: HTMLDivElement) {
+        datePickerDays.append {
             thead {
                 tr {
                     WEEK_DAYS.forEach { weekDay ->
@@ -127,24 +128,72 @@ class DatePicker(private val inputField: HTMLInputElement, private var date: Dat
             }
         }
 
-        populateMonth(datePickerCalendar, date)
-        datePickerView.appendChild(datePickerCalendar)
+        populateMonth(datePickerDays, datePickerModel.date)
+        datePickerCalendar.appendChild(datePickerDays)
+    }
+
+    /**
+     * Creates the filter to select the days that can be selectable
+     */
+    private fun buildFilters(datePickerView: HTMLDivElement) {
+        if (datePickerModel.showFilters) {
+            datePickerView.append {
+                div(DATE_PICKER_PREFIX + "-filter") {
+                    h4 { +"Filter calendar by: " }
+
+                    for (filter in FilterCalendar.values()) {
+                        radioInput(classes = "state", name = "filter") {
+                            id = filter.name.toLowerCase()
+
+                            if (filter.ordinal == 0) {
+                                checked = true
+                            }
+
+                            onClickFunction = { event ->
+                                filterCalendar(event)
+                            }
+                        }
+                    }
+
+                    div("tabs") {
+                        for (filter in FilterCalendar.values()) {
+                            label("tab") {
+                                for_ = filter.toString()
+                                id = "label-$filter"
+                                +filter.label
+                            }
+                        }
+                    }
+
+                    onClickFunction = Event::stopPropagation
+                }
+            }
+        }
+    }
+
+    /**
+     * Filter the given calendar
+     */
+    private fun filterCalendar(event: Event) {
+        val filterSelected = event.target as HTMLInputElement
+        this@DatePicker.datePickerModel.filter = FilterCalendar.from(filterSelected.id)
+        populateMonth(datePickerDays, datePickerModel.date, true)
     }
 
     /**
      * Populate the month values
      */
-    private fun populateMonth(datePickerCalendar: HTMLTableElement, date: Date, replace: Boolean = false) {
+    private fun populateMonth(datePickerDays: HTMLTableElement, date: Date, replace: Boolean = false) {
         if (replace) {
-            datePickerCalendar.tBodies[0]?.remove()
+            datePickerDays.tBodies[0]?.remove()
             populateTitle(date)
         }
-        val tbody = datePickerCalendar.createTBody()
+        val tBody = datePickerDays.createTBody()
 
         var dayIndex = 0
         val days = getDays(date)
-        var firstDay = days[dayIndex].date.getDayOfMonth()
-        var tableRow = tbody.insertRow() as HTMLTableRowElement
+        var firstDay = days[dayIndex].date.getDayOfWeek()
+        var tableRow = tBody.insertRow() as HTMLTableRowElement
 
         (0 until firstDay).forEach {
             tableRow.insertCell()
@@ -152,7 +201,7 @@ class DatePicker(private val inputField: HTMLInputElement, private var date: Dat
 
         while (dayIndex < days.size) {
             dayIndex = buildWeek(tableRow, days, dayIndex, firstDay)
-            tableRow = tbody.insertRow() as HTMLTableRowElement
+            tableRow = tBody.insertRow() as HTMLTableRowElement
             firstDay = 0
         }
     }
@@ -168,11 +217,16 @@ class DatePicker(private val inputField: HTMLInputElement, private var date: Dat
                 cell.apply {
                     addClass(DATE_PICKER_PREFIX + "-day")
                     if (day.selected) addClass(DATE_PICKER_SELECTED_CSS_CLASS)
+                    if (day.enable) {
+                        onclick = {
+                            select(this, day)
+                            datePickerModel.onSelect?.let { onSelect -> onSelect(datePickerModel.date) }
+                        }
+                    } else {
+                        addClass(DATE_PICKER_PREFIX + "-disabled")
+                    }
 
                     innerText = "" + day.date.getDate()
-                    onclick = {
-                        select(this, day)
-                    }
                 }
 
                 dayIndex++
@@ -189,9 +243,9 @@ class DatePicker(private val inputField: HTMLInputElement, private var date: Dat
         clearSelected()
         day.selected = true
         element.addClass(DATE_PICKER_SELECTED_CSS_CLASS)
-        date = day.date
+        datePickerModel.date = day.date
 
-        inputField.value = day.date.toShortString()
+        datePickerModel.inputField.value = day.date.toShortString()
         datePickerView.toggle()
     }
 
@@ -199,10 +253,31 @@ class DatePicker(private val inputField: HTMLInputElement, private var date: Dat
      * Get the days from the given month and year
      */
     private fun getDays(date: Date): List<Day> {
+        val currentDate = Date()
+
         return (1..31).map {
             val dayDate = date.clone()
             dayDate.setDate(it)
-            Day(dayDate, selected = (this@DatePicker.date.toShortString() == dayDate.toShortString()))
+            var enable = true
+
+            // Filtering options
+            if (datePickerModel.disablePreviousCurrentDate) {
+                enable = (dayDate.dateInt() >= currentDate.dateInt())
+            }
+            when (datePickerModel.filter) {
+                FilterCalendar.WEEKDAYS -> {
+                    enable = enable && dayDate.isWeekday()
+                }
+                FilterCalendar.WEEKENDS -> {
+                    enable = enable && dayDate.isWeekend()
+                }
+                else -> {
+                }
+            }
+
+            Day(dayDate,
+                    selected = (currentDate.toShortString() == dayDate.toShortString()),
+                    enable = enable)
         }.filter { (innerDate) ->
             date.getMonth() == innerDate.getMonth()
         }
@@ -215,6 +290,28 @@ class DatePicker(private val inputField: HTMLInputElement, private var date: Dat
         document.getElementsByClassName(DATE_PICKER_SELECTED_CSS_CLASS).removeCssClass(DATE_PICKER_SELECTED_CSS_CLASS)
     }
 
+    fun clear() {
+        datePickerModel.inputField.value = ""
+    }
+
+    fun getDate(): Date = this.datePickerModel.date
+
 }
 
 data class Day(val date: Date, var selected: Boolean = false, var enable: Boolean = true)
+
+data class datePickerModel(val inputField: HTMLInputElement, var date: Date = Date(),
+                           val disablePreviousCurrentDate: Boolean = true, var filter: FilterCalendar = FilterCalendar.ANY,
+                           val showFilters: Boolean = false, val onSelect: ((date: Date) -> Unit)? = null)
+
+enum class FilterCalendar(val label: String) {
+    ANY("Any date"), WEEKDAYS("Only weekdays"), WEEKENDS("Only weekends");
+
+    companion object {
+        fun from(string: String): FilterCalendar = valueOf(string.toUpperCase())
+    }
+
+    override fun toString(): String {
+        return name.toLowerCase()
+    }
+}
