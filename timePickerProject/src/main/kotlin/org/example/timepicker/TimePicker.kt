@@ -70,7 +70,7 @@ class TimePicker(private val inputField: HTMLInputElement, var selectedTime: Tim
         var intervals = getIntervals(date)
         if (disablePreviousCurrentTime) {
             intervals = intervals.filter(Time::enabled)
-            intervals[0].selected = true
+            if (intervals.isNotEmpty()) intervals[0].selected = true
         }
 
         intervals.forEach { time ->

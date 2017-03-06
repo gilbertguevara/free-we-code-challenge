@@ -1,3 +1,5 @@
+apply plugin: 'kotlin2js'
+
 dependencies {
     compile project(":datePickerProject")
     compile project(":timePickerProject")
@@ -9,6 +11,11 @@ compileKotlin2Js {
     kotlinOptions.suppressWarnings = true
     kotlinOptions.moduleKind = 'umd'
     kotlinOptions.verbose = true
+}
+
+
+clean.doFirst() {
+    delete("${rootDir}/${web_dir}")
 }
 
 build.doLast {
@@ -23,5 +30,11 @@ build.doLast {
                 path.endsWith(".js") && (path.startsWith("META-INF/resources/") || !path.startsWith("META-INF/"))
             }
         }
+    }
+
+    copy {
+        includeEmptyDirs = false
+        from new File("build/resources/main")
+        into "${rootDir}/${web_dir}"
     }
 }

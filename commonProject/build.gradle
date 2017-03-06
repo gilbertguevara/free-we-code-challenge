@@ -1,3 +1,10 @@
+apply plugin: 'kotlin2js'
+
+dependencies {
+    compile "org.jetbrains.kotlinx:kotlinx-html-js:$kotlinx_html_version"
+    testCompile "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version"
+}
+
 task jarSources(type: Jar) {
     from sourceSets.main.allSource
     classifier = 'source'
@@ -7,11 +14,21 @@ artifacts {
 }
 
 def outDir = "${buildDir}/kotlin2js/main/"
+def outTestDir = "${buildDir}/kotlin2js/test/"
 
 compileKotlin2Js {
     kotlinOptions.outputFile = outDir + "common-library.js"
     kotlinOptions.sourceMap = true
     kotlinOptions.suppressWarnings = true
+}
+
+compileTestKotlin2Js {
+    kotlinOptions.outputFile = outTestDir + "common-library-test.js"
+    kotlinOptions.sourceMap = true
+}
+
+clean.doFirst() {
+    delete("${web_dir}")
 }
 
 jar {
@@ -30,3 +47,30 @@ jar {
 }
 
 jar.dependsOn(compileKotlin2Js)
+
+build.doLast() {
+    configurations.testCompile.each { File file ->
+        copy {
+            includeEmptyDirs = false
+
+            from zipTree(file.absolutePath)
+            into "${rootDir}/web/js/test"
+            include { fileTreeElement ->
+                def path = fileTreeElement.path
+                path.endsWith(".js") && (path.startsWith("META-INF/resources/") || !path.startsWith("META-INF/"))
+            }
+        }
+    }
+
+    copy {
+        includeEmptyDirs = false
+        from new File(outTestDir)
+        into "${rootDir}/${web_dir}/js/test"
+    }
+
+    copy {
+        includeEmptyDirs = false
+        from new File("build/resources/test")
+        into "${rootDir}/${web_dir}"
+    }
+}

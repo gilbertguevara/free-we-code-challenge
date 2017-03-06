@@ -1,6 +1,7 @@
 buildscript {
     ext.kotlin_version = '1.1.0'
     ext.kotlinx_html_version = '0.6.2'
+    ext.web_dir = 'web'
 
     repositories {
         jcenter()
@@ -11,13 +12,7 @@ buildscript {
 }
 
 subprojects {
-    apply plugin: 'kotlin2js'
-
     repositories {
         jcenter()
-    }
-
-    dependencies {
-        compile "org.jetbrains.kotlinx:kotlinx-html-js:$kotlinx_html_version"
     }
 }

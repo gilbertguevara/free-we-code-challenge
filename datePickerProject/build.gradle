@@ -1,3 +1,5 @@
+apply plugin: 'kotlin2js'
+
 dependencies {
     compile project(':commonProject')
 }
