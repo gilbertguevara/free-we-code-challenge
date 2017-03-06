@@ -26,7 +26,7 @@ class TimePicker(private val inputField: HTMLInputElement, var selectedTime: Tim
         const val TIME_PICKER_PREFIX = "timepicker"
         const val TIME_PICKER_SELECTED_CSS_CLASS = TIME_PICKER_PREFIX + "-selected"
         const val INTERVAL_ATTRIBUTE = "data-interval"
-        const val MAX_TIME_RANGE = 15 * 4 * 24 // Four intervals every hour per 24 hours minus 1 interval
+        const val MAX_TIME_RANGE = 15 * 4 * 24 // Four intervals every hour per 24 hours
         val DEFAULT_TIME_VALUE = Time(60 * 12)
     }
 
