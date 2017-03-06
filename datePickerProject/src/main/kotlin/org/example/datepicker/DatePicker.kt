@@ -90,6 +90,8 @@ class DatePicker(private val datePickerModel: datePickerModel) {
                         event.stopPropagation()
                     }
                 }
+            }.forEach {
+                println(it.outerHTML)
             }
         }
     }

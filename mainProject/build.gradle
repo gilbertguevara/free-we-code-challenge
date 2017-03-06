@@ -1,5 +1,3 @@
-apply plugin: 'kotlin2js'
-
 dependencies {
     compile project(":datePickerProject")
     compile project(":timePickerProject")
@@ -15,7 +13,7 @@ compileKotlin2Js {
 
 
 clean.doFirst() {
-    delete("${rootDir}/${web_dir}")
+    delete("${webDir}")
 }
 
 build.doLast {
@@ -35,6 +33,6 @@ build.doLast {
     copy {
         includeEmptyDirs = false
         from new File("build/resources/main")
-        into "${rootDir}/${web_dir}"
+        into "${webDir}"
     }
 }

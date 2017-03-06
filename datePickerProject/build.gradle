@@ -1,7 +1,6 @@
-apply plugin: 'kotlin2js'
-
 dependencies {
     compile project(':commonProject')
+    testCompile "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version"
 }
 
 task jarSources(type: Jar) {
@@ -19,6 +18,12 @@ compileKotlin2Js {
     kotlinOptions.sourceMap = true
     kotlinOptions.suppressWarnings = true
 }
+
+compileTestKotlin2Js {
+    kotlinOptions.outputFile = outTestDir + "datepicker-library-test.js"
+    kotlinOptions.sourceMap = true
+}
+
 
 jar {
     from sourceSets.main.allSource

@@ -1,7 +1,9 @@
 buildscript {
     ext.kotlin_version = '1.1.0'
     ext.kotlinx_html_version = '0.6.2'
-    ext.web_dir = 'web'
+    ext.webDir = "${rootDir}/web"
+    ext.outDir = "${buildDir}/kotlin2js/main/"
+    ext.outTestDir = "${buildDir}/kotlin2js/test/"
 
     repositories {
         jcenter()
@@ -12,7 +14,36 @@ buildscript {
 }
 
 subprojects {
+    apply plugin: 'kotlin2js'
+
     repositories {
         jcenter()
+    }
+
+    build.doLast() {
+        configurations.testCompile.each { File file ->
+            copy {
+                includeEmptyDirs = false
+
+                from zipTree(file.absolutePath)
+                into "${rootDir}/web/js/test"
+                include { fileTreeElement ->
+                    def path = fileTreeElement.path
+                    path.endsWith(".js") && (path.startsWith("META-INF/resources/") || !path.startsWith("META-INF/"))
+                }
+            }
+        }
+
+        copy {
+            includeEmptyDirs = false
+            from new File(outTestDir)
+            into "${webDir}/js/test"
+        }
+
+        copy {
+            includeEmptyDirs = false
+            from new File("build/resources/test")
+            into "${webDir}"
+        }
     }
 }

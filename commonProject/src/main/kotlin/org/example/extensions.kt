@@ -15,11 +15,10 @@ import kotlin.js.Date
  */
 
 // Int related extensions
-fun Int.appendZero(): String = if (this > 9 || this < 1) "$this" else "0" + this
+fun Int.appendZero(): String = if (this > 9 || this < 0) "$this" else "0" + this
 
 // Date related extensions
 inline fun Date.getDayOfWeek(): Int = asDynamic().getDay()
-
 inline fun Date.getDate(): Int = asDynamic().getDate()
 inline fun Date.getMonth(): Int = asDynamic().getMonth()
 inline fun Date.getFullYear(): Int = asDynamic().getFullYear()
