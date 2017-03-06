@@ -2,9 +2,7 @@ package org.example.timepicker
 
 import kotlinx.html.classes
 import kotlinx.html.dom.append
-import kotlinx.html.dom.create
 import kotlinx.html.li
-import kotlinx.html.nav
 import org.example.*
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
@@ -46,9 +44,7 @@ class TimePicker(private val inputField: HTMLInputElement, var selectedTime: Tim
             }
         }
 
-        inputField.insertAdjacentElement("afterend", document.create.nav {}.apply {
-            append(timePickerView)
-        })
+        inputField.insertAdjacentElement("afterend", timePickerView)
         initTimePicker()
     }
 
@@ -111,7 +107,7 @@ class TimePicker(private val inputField: HTMLInputElement, var selectedTime: Tim
      */
     private fun selectTime() {
         document.getElementsByClassName(TIME_PICKER_SELECTED_CSS_CLASS).asList().forEach { element ->
-            val liElement = element as HTMLLIElement
+            val liElement = element as HTMLElement
             liElement.getAttribute(INTERVAL_ATTRIBUTE)?.let { interval ->
                 select(liElement, Time(interval.toInt()))
             }
@@ -131,7 +127,7 @@ class TimePicker(private val inputField: HTMLInputElement, var selectedTime: Tim
     /**
      * Select a given time in the component
      */
-    fun select(element: HTMLLIElement, time: Time) {
+    fun select(element: HTMLElement, time: Time) {
         clearSelected()
         element.addClass(TIME_PICKER_SELECTED_CSS_CLASS)
 

@@ -1,5 +1,6 @@
 dependencies {
     compile project(':commonProject')
+    testCompile "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version"
 }
 
 task jarSources(type: Jar) {
@@ -16,6 +17,11 @@ compileKotlin2Js {
     kotlinOptions.outputFile = outDir + "timepicker-library.js"
     kotlinOptions.sourceMap = true
     kotlinOptions.suppressWarnings = true
+}
+
+compileTestKotlin2Js {
+    kotlinOptions.outputFile = outTestDir + "timepicker-library-test.js"
+    kotlinOptions.sourceMap = true
 }
 
 jar {
