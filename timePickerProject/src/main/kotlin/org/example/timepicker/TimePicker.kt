@@ -16,9 +16,9 @@ import kotlin.dom.createElement
 import kotlin.js.Date
 
 /**
- * User: HUGE-gilbert
- * Date: 2/27/17
- * Time: 10:31 AM
+ * Created by gilbert.
+ *
+ * Time picker component.
  */
 class TimePicker(private val inputField: HTMLInputElement, var selectedTime: Time = DEFAULT_TIME_VALUE,
                  val disablePreviousCurrentTime: Boolean = true) {

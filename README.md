@@ -21,6 +21,17 @@ This will generate the index.html and all the files necessary to run the unit te
 
 Navigate to web/index.html folder and open it on any browser.
 
+Below, you can find some screenshots:
+
+![Appointment Creator](screenshots/appointment_creator.png)
+
+![Date Picker](screenshots/date_picker.png)
+
+![Time Picker](screenshots/time_picker.png)
+
+![Save Appointment](screenshots/save_appointment.png)
+
+
 ## Running the tests
 
 There are three generated HTML files under web:

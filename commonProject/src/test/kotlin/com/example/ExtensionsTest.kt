@@ -17,9 +17,9 @@ import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 
 /**
- * User: HUGE-gilbert
- * Date: 3/6/17
- * Time: 9:15 AM
+ * Created by gilbert.
+ *
+ * Extension functions tests.
  */
 class ExtensionsTest {
     companion object {

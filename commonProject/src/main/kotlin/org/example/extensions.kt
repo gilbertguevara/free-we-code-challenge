@@ -8,10 +8,6 @@ import kotlin.js.Date
 
 /**
  * Extension functions
- *
- * User: HUGE-gilbert
- * Date: 2/24/17
- * Time: 1:14 PM
  */
 
 // Int related extensions

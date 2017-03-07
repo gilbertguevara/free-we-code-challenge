@@ -14,9 +14,9 @@ import kotlin.dom.createElement
 import kotlin.js.Date
 
 /**
- * User: HUGE-gilbert
- * Date: 2/22/17
- * Time: 6:07 PM
+ * Created by gilbert.
+ *
+ * Date Picker component.
  */
 class DatePicker(private val datePickerModel: datePickerModel) {
 

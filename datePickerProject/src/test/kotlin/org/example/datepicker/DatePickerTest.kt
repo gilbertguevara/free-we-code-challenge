@@ -17,9 +17,9 @@ import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 
 /**
- * User: HUGE-gilbert
- * Date: 3/6/17
- * Time: 1:51 PM
+ * Created by gilbert.
+ *
+ * Date picker tests.
  */
 class DatePickerTest {
     companion object {

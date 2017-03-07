@@ -19,9 +19,9 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 /**
- * User: HUGE-gilbert
- * Date: 3/6/17
- * Time: 4:19 PM
+ * Created by gilbert.
+ *
+ * Time Picker component tests.
  */
 class TimePickerTest {
     companion object {
